@@ -7,7 +7,7 @@ CREATE TABLE users (
   email VARCHAR
 );
 
-INSERT INTO users (first_name, second_name, first_surname, second_surname,email)
-  VALUES ('Rolando', 'José', 'Andrade', 'Fernández','rolandoandradefernandez@gmail.com');
+INSERT INTO users (first_name, first_surname, second_surname,email)
+  VALUES ('Rolando', 'Andrade', 'Fernández','rolandoandradefernandez@gmail.com');
 
 SELECT * FROM  users
