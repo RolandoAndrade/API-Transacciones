@@ -28,8 +28,8 @@ function getAllUsers(req, res, next)
 
 function getUserByID(req, res, next)
 {
-    const pupID = parseInt(req.params.id);
-    db.one('select * from users where id = $1', pupID)
+    const userID = parseInt(req.params.id);
+    db.one('select * from users where id = $1', userID)
         .then(function (data)
         {
             res.status(200)
@@ -77,21 +77,41 @@ function createUser(req, res, next)
         });
 }
 
-function updatePuppy(req, res, next) {
-    db.none('update users set name=$1, breed=$2, age=$3, sex=$4 where id=$5',
-        [req.body.name, req.body.breed, parseInt(req.body.age),
-            req.body.sex, parseInt(req.params.id)])
-        .then(function ()
+function updateUser(req, res, next)
+{
+    const userID = parseInt(req.params.id);
+    db.one('select * from users where id = $1', userID)
+        .then(function (data)
         {
-            res.status(200)
-                .json({
-                    status: 'success',
-                    message: 'Updated puppy'
+            req.body.first_name=req.body.first_name||data.first_name;
+            req.body.second_name=req.body.second_name||data.second_name;
+            req.body.first_surname=req.body.first_surname||data.first_surname;
+            req.body.second_surname=req.body.second_surname||data.second_surname;
+            req.body.email=req.body.email||data.email;
+            db.none('update users set first_name=$1, second_name=$2, first_surname=$3, second_surname=$4, email=$5' +
+                ' where id=$6',
+                [req.body.first_name, req.body.second_name, req.body.first_surname, req.body.second_surname,
+                    req.body.email, parseInt(req.params.id)])
+                .then(function ()
+                {
+                    res.status(200)
+                        .json({
+                            status: 'success',
+                            message: req.body
+                        });
+                })
+                .catch(function (err)
+                {
+                    return next(err);
                 });
         })
-        .catch(function (err) {
+        .catch(function (err)
+        {
+            if(err.message==="No data returned from the query.")
+                return next("No hay usuario con este ID");
             return next(err);
         });
+
 }
 
 function removePuppy(req, res, next) {
@@ -116,6 +136,6 @@ module.exports = {
     getAllPuppies: getAllUsers,
     getUserByID: getUserByID,
     createUser: createUser,
-    /*updatePuppy: updatePuppy,
-    removePuppy: removePuppy*/
+    updateUser: updateUser,
+    /*removePuppy: removePuppy*/
 };

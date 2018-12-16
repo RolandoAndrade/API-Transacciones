@@ -7,8 +7,10 @@ router.get('/api/users', db.getAllPuppies);
 router.get('/api/users/:id(\\d+)', db.getUserByID);
 
 router.post('/api/users', db.createUser);
-/*router.put('/api/puppies/:id', db.updatePuppy);
-router.delete('/api/puppies/:id', db.removePuppy);*/
+
+router.put('/api/users/:id(\\d+)', db.updateUser);
+
+/*router.delete('/api/puppies/:id', db.removePuppy);*/
 
 // application -------------------------------------------------------------
 router.get('/', function (req, res) {
