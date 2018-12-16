@@ -45,7 +45,7 @@ function getUserByID(req, res, next)
 function createUser(req, res, next) {
     console.log(req.body);
     db.none('insert into users (first_name, second_name, first_surname, second_surname,email) '+
-    'VALUES (${first_name}, ${second_name}, ${first_surname}, $(second_surname),${email)',
+    "VALUES (${first_name}, ${second_name}, ${first_surname}, ${second_surname}, ${email})",
         req.body)
         .then(function () {
             res.status(200)
