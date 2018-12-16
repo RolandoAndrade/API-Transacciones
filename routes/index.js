@@ -2,15 +2,15 @@ var express = require('express');
 var router = express.Router();
 var db = require('../queries');
 
-router.get('/api/users', db.getAllUsers);
+router.get('/api/customers', db.getAllUsers);
 
-router.get('/api/users/:id(\\d+)', db.getUserByID);
+router.get('/api/customers/:id(\\d+)', db.getUserByID);
 
-router.post('/api/users', db.createUser);
+router.post('/api/customers', db.createUser);
 
-router.put('/api/users/:id(\\d+)', db.updateUser);
+router.put('/api/customers/:id(\\d+)', db.updateUser);
 
-router.delete('/api/users/:id', db.removeUser);
+router.delete('/api/customers/:id', db.removeUser);
 
 // application -------------------------------------------------------------
 router.get('/', function (req, res) {
