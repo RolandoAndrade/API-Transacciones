@@ -16,3 +16,16 @@ SELECT * FROM  users
 select * from users
 where LOWER(second_name)  like LOWER('')
 order by ID
+
+
+CREATE TABLE transactions (
+  ID SERIAL PRIMARY KEY,
+  customer INTEGER,
+  date DATE,
+  amount FLOAT
+);
+
+SELECT * FROM  transactions
+
+INSERT INTO transactions (customer, date, amount)
+  VALUES (1, '2018-12-16', 10.3);

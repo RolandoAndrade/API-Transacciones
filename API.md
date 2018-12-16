@@ -24,6 +24,10 @@
    
    Obtiene al cliente con el id asociado
    
+   >`DELETE` api/customers/id
+      
+   Elimina al cliente con el id asociado
+   
    >`GET` api/customers?queries
    
    Devulve un cliente con los parámetros establecidos:
@@ -69,28 +73,28 @@
     
     El campo ``second_name`` es opcional.
     
-* **Success Response:**
+* **Respuesta exitosa:**
   
 
-  * **Code:** 200 <br />
-    **Content:** `{ id : 12 }`
+  * **Status:** _success_ <br />
+    **Data:** 
+    ```json
+    {
+      "id": 1,
+      "first_name": "Pablo",
+      "second_name": "Pedro",
+      "first_surname": "Pérez",
+      "second_surname": "Pal",
+      "email": "pablo@example.com"
+    }
+    ```
  
-* **Error Response:**
+* **Respuesta errónea:**
 
-  <_Most endpoints will have many ways they can fail. From unauthorized access, to wrongful parameters etc. All of those should be liste d here. It might seem repetitive, but it helps prevent assumptions from being made where they should be._>
-
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "Log in" }`
+  * **Status:** "Error" <br />
+    **Message:** `{ error : "Log in" }`
 
   OR
 
-  * **Code:** 422 UNPROCESSABLE ENTRY <br />
-    **Content:** `{ error : "Email Invalid" }`
-
-* **Sample Call:**
-
-  <_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._> 
-
-* **Notes:**
-
-  <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._> 
+  * **Status:** "Error"
+    **Message:** `{ error : "Email Invalid" }`

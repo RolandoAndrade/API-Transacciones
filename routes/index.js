@@ -12,6 +12,14 @@ router.put('/api/customers/:id(\\d+)', db.updateUser);
 
 router.delete('/api/customers/:id', db.removeUser);
 
+router.get('/api/transactions', db.getAllTransactions);
+
+router.get('/api/transactions/:id(\\d+)', db.getTransactionByID);
+
+router.post('/api/transactions', db.createATransaction);
+
+router.put('/api/transactions/:id(\\d+)', db.updateTransactions);
+
 // application -------------------------------------------------------------
 router.get('/', function (req, res) {
 

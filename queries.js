@@ -165,10 +165,118 @@ function searchUser(req, res, next)
         });
 }
 
+
+function getAllTransactions(req, res, next)
+{
+    db.any('select * from transactions')
+        .then(function (data)
+        {
+            res.status(200)
+                .json({
+                    status: 'success',
+                    data: data,
+                });
+        })
+        .catch(function (err)
+        {
+            return next(err);
+        });
+}
+
+function getTransactionByID(req, res, next)
+{
+    const userID = parseInt(req.params.id);
+    db.one('select * from transactions where id = $1', userID)
+        .then(function (data)
+        {
+            res.status(200)
+                .json({
+                    status: 'success',
+                    data: data
+                });
+        })
+        .catch(function (err)
+        {
+            if(err.message==="No data returned from the query.")
+                return next("No hay transacción con este ID");
+            return next(err);
+        });
+}
+
+
+function createATransaction(req, res, next)
+{
+    if (req.body.date===undefined)
+    {
+        req.body.date=new Date();
+    }
+    db.none('insert into transactions (customer, date, amount) '+
+        "VALUES (${customer}, ${date}, ${amount})",
+        req.body)
+        .then(function ()
+        {
+            db.one('SELECT * FROM transactions ORDER BY ID DESC LIMIT 1')
+                .then(function (data)
+                {
+                    res.status(200)
+                        .json({
+                            status: 'success',
+                            data: data
+                        });
+                })
+                .catch(function (err)
+                {
+                    return next(err);
+                });
+        })
+        .catch(function (err)
+        {
+            return next(err.message);
+        });
+}
+
+function updateTransactions(req, res, next)
+{
+    const userID = parseInt(req.params.id);
+    db.one('select * from transactions where id = $1', userID)
+        .then(function (data)
+        {
+            req.body.customer=req.body.customer||data.customer;
+            req.body.date=new Date(req.body.date)||data.date;
+            req.body.amount=req.body.first_surname||data.amount;
+            db.none('update transactions set customer=$1, date=$2, amount=$3' +
+                ' where id=$4',
+                [req.body.customer, req.body.date, req.body.amount, req.body.second_surname, parseInt(req.params.id)])
+                .then(function ()
+                {
+                    res.status(200)
+                        .json({
+                            status: 'success',
+                            message: req.body
+                        });
+                })
+                .catch(function (err)
+                {
+                    return next(err);
+                });
+        })
+        .catch(function (err)
+        {
+            if(err.message==="No data returned from the query.")
+                return next("No hay transacciones con este ID");
+            return next(err);
+        });
+
+}
+
 module.exports = {
     getAllUsers: getAllUsers,
     getUserByID: getUserByID,
     createUser: createUser,
     updateUser: updateUser,
     removeUser: removeUser,
+    getAllTransactions: getAllTransactions,
+    getTransactionByID:getTransactionByID,
+    createATransaction: createATransaction,
+    updateTransactions: updateTransactions,
 };
