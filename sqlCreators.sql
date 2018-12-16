@@ -29,3 +29,5 @@ SELECT * FROM  transactions
 
 INSERT INTO transactions (customer, date, amount)
   VALUES (1, '2018-12-16', 10.3);
+
+select * from transactions where CAST(amount AS VARCHAR(20)) like '%11%'

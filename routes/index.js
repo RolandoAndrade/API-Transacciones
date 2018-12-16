@@ -20,6 +20,8 @@ router.post('/api/transactions', db.createATransaction);
 
 router.put('/api/transactions/:id(\\d+)', db.updateTransactions);
 
+router.delete('/api/transactions/:id', db.removeTransaction);
+
 // application -------------------------------------------------------------
 router.get('/', function (req, res) {
 
