@@ -11,6 +11,10 @@ const db = pgp(connectionString);
 
 function getAllUsers(req, res, next)
 {
+    if(req.query.toString().length>0)
+    {
+         return searchUser(req,res,next);
+    }
     db.any('select * from users')
         .then(function (data)
         {
@@ -114,28 +118,57 @@ function updateUser(req, res, next)
 
 }
 
-function removePuppy(req, res, next) {
-    var pupID = parseInt(req.params.id);
-    db.result('delete from users where id = $1', pupID)
-        .then(function (result) {
-            /* jshint ignore:start */
+function removeUser(req, res, next)
+{
+    const userID = parseInt(req.params.id);
+    db.result('delete from users where id = $1', userID)
+        .then(function (result)
+        {
             res.status(200)
                 .json({
                     status: 'success',
-                    message: `Removed ${result.rowCount} puppy`
+                    message: `Removed ${result.rowCount} user`
                 });
-            /* jshint ignore:end */
         })
-        .catch(function (err) {
+        .catch(function (err)
+        {
             return next(err);
         });
 }
 
+function searchUser(req, res, next)
+{
+    const first_name = req.query.first_name;
+    const second_name = req.query.second_name;
+    const first_surname = req.query.first_surname;
+    const second_surname = req.query.second_surname;
+    const email = req.query.email;
+    let qu='select * from users' +
+        ' where LOWER(first_name) like LOWER('+"'%"+(first_name||"")+"%'"+')'+
+        'and LOWER(second_name) like LOWER('+"'%"+(second_name||"")+"%'"+')'+
+        'and LOWER(first_surname) like LOWER('+"'%"+(first_surname||"")+"%'"+')'+
+        'and LOWER(second_surname) like LOWER('+"'%"+(second_surname||"")+"%'"+')'+
+        'and LOWER(email) like LOWER('+"'%"+(email||"")+"%'"+')';
+    console.log(qu);
+    db.any(qu)
+        .then(function (data)
+        {
+            res.status(200)
+                .json({
+                    status: 'success',
+                    data: data,
+                });
+        })
+        .catch(function (err)
+        {
+            return next(err);
+        });
+}
 
 module.exports = {
-    getAllPuppies: getAllUsers,
+    getAllUsers: getAllUsers,
     getUserByID: getUserByID,
     createUser: createUser,
     updateUser: updateUser,
-    /*removePuppy: removePuppy*/
+    removeUser: removeUser,
 };

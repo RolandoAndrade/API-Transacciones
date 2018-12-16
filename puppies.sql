@@ -11,3 +11,8 @@ INSERT INTO users (first_name, first_surname, second_surname,email)
   VALUES ('Rolando', 'Andrade', 'Fernández','rolandoandradefernandez@gmail.com');
 
 SELECT * FROM  users
+
+
+select * from users
+where LOWER(second_name)  like LOWER('')
+order by ID
