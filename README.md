@@ -1,14 +1,17 @@
-#TransAPI
-API REST de un servicio de transacciones y clientes realizada como bono de 5 puntos en el segundo parcial de Ingeniería del Software.
+**TransAPI**
 
-##Empezando
+TransAPI es una API REST de un servicio de transacciones y clientes realizada como bono de 5 puntos en el segundo parcial de Ingeniería del Software.
+
+**Empezando**
+
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-##Prerequisitos
+**Prerequisitos**
+
 What things you need to install the software and how to install them
 
 
-Built With
+**Built With**
 Dropwizard - The web framework used
 Maven - Dependency Management
 ROME - Used to generate RSS Feeds

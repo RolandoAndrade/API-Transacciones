@@ -32,7 +32,7 @@
    
    `PUT` Actualiza los datos del cliente con el id asociado.
    
-   >`GET` api/customers?queries
+   >`GET` api/customers?param1&param2...
    
    Devulve un cliente con los parámetros establecidos:
    
@@ -139,6 +139,15 @@
     }
     ```
     
+    >`DELETE` api/customers/1
+      
+    ```json
+    {
+      "status": "success",
+      "message": "Removed 1 user"
+    }
+    ```
+    
     >`POST` api/customers
       
      ```json
@@ -163,7 +172,7 @@
   ```json
        {
            "status": "error",
-           "message": "There is not an user with this ID"
+           "message": "There is not costumer with the given ID"
        }
   ```
         

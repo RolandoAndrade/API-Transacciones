@@ -32,9 +32,9 @@
    
    `PUT` Actualiza los datos de la transacción con el id asociado.
    
-   >`GET` api/transactions?first_name=A&second...
+   >`GET` api/transactions?param1&param2...
    
-   Devulve un cliente con los parámetros establecidos:
+   Devulve una transacción con los parámetros establecidos:
    
    _Parámetros disponibles:_
    
@@ -49,6 +49,7 @@
    **Requisitos:**
  
    `id=[integer]`
+   `amount=[float]`
 
 * **Parámetros de cuerpo**
 
@@ -72,17 +73,15 @@
     
     Si se quiere total precisión con los datos ``date`` es guardado en formato ISO-8601 "yyYY-mm-ddThh:mm:ss.000Z"
     
-    >`UPDATE` api/customers/{id}
+    >`UPDATE` api/transactions/{id}
     
     El cuerpo de la petición debe tener la siguiente forma:
     
     ```json
         {
-          "first_name": "Pablo",
-          "second_name": "Pedro",
-          "first_surname": "Pérez",
-          "second_surname": "Pal",
-          "email": "pablo@example.com"
+          "customer": customer_id,
+          "date": "13-12-1998",
+          "amount": 10.3
         }
     ```
     
@@ -97,78 +96,105 @@
     
 * **Respuesta exitosa:**
   
-    >`GET` api/customers
+    >`GET` api/transactions
     
     ```json
         {
             "status": "success",
             "data": [
             {
-               "id": 1,
-               "first_name": "Pedro",
-               "second_name": "Pablo",
-               "first_surname": "Pérez",
-               "second_surname": "Pal",
-               "email": "pedro@example.com"
-           },
-           {
-               "id": 2,
-               "first_name": "José",
-               "second_name": "",
-               "first_surname": "Jor",
-               "second_surname": "Jent",
-               "email": "jent@example.com"
-           }
+              "id": 1,
+              "customer": {
+                  "id": 1,
+                  "first_name": "Pedro",
+                  "second_name": "Pablo",
+                  "first_surname": "Pérez",
+                  "second_surname": "Pal",
+                  "email": "rolandoandradefernandez@gmail.com",
+                },
+                "date": "2018-12-22T04:00:00.000Z",
+                "amount": 10.3
+            },
+            {
+              "id": 2,
+              "customer": {
+                  "id": 1,
+                  "first_name": "Pedro",
+                  "second_name": "Pablo",
+                  "first_surname": "Pérez",
+                  "second_surname": "Pal",
+                  "email": "pedro@example.com"
+                },
+                "date": "2018-12-22T04:00:00.000Z",
+                "amount": 12.3
+            }
            ]
         }
     ```
     
-     >`GET` | `PUT` api/customers/1
+     >`GET` | `PUT` api/transactions/1
   
     ```json
     {
-
         "status": "success",
         "data": {
             "id": 1,
-            "first_name": "Pablo",
-            "second_name": "Pedro",
-            "first_surname": "Pérez",
-            "second_surname": "Pal",
-            "email": "pedro@example.com"
+            "customer": {
+                "id": 4,
+                "first_name": "Pedro",
+                "second_name": "Pablo",
+                "first_surname": "Pérez",
+                "second_surname": "Pal",
+                "email": "pedro@example.com"
+            },
+            "date": "2018-12-22T04:00:00.000Z",
+            "amount": 10.3
         }
     }
     ```
     
-    >`POST` api/customers
+    >`DELETE` api/transactions/1
       
      ```json
      {
          "status": "success",
-         "data": 
-         {
+         "message": "Removed 1 transaction"
+     }
+     ```
+    
+    >`POST` api/transactions
+      
+     ```json
+     {
+         "status": "success",
+         "data": {
              "id": 1,
-             "first_name": "Pablo",
-             "second_name": "Pedro",
-             "first_surname": "Pérez",
-             "second_surname": "Pal",
-             "email": "pedro@example.com"
+             "customer": {
+                 "id": 1,
+                 "first_name": "Pedro",
+                 "second_name": "Pablo",
+                 "first_surname": "Pérez",
+                 "second_surname": "Pal",
+                 "email": "pedro@example.com"
+             },
+             "date": "2018-12-22T04:00:00.000Z",
+             "amount": 2
          }
      }
      ```
  
 * **Respuesta errónea:**
 
-  >`GET` | `PUT` | `DELETE` api/customers/1000
+  >`GET` | `PUT` | `DELETE` api/transactions/1000
 
   ```json
        {
            "status": "error",
-           "message": "There is not an user with this ID"
+           "message": "There is not transaction with the given ID"
        }
   ```
         
-  >`GET` | `PUT` | `DELETE` api/customers/A
+  >`GET` | `PUT` | `DELETE` api/transactions/A
 
   ```json
     {
@@ -179,7 +205,7 @@
     }
   ```
   
-  >`POST` api/customers
+  >`POST` api/transactions
   
   ```json
       {
@@ -188,18 +214,11 @@
       }
   ```
   
-  >`POST` api/customers | `PUT` api/customers/1
+  >`POST` api/transactions | `PUT` api/transactions/{id}
   
   ```json
         {
             "status": "error",
-            "message": "Email format incorrect"
-        }
-    ```
-    
-  ```json
-        {
-            "status": "error",
-            "message": "Email already registered"
+            "message": "There is not costumer with the given ID"
         }
     ```

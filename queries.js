@@ -29,7 +29,7 @@ function getUserByID(req, res, next)
         .catch(function (err)
         {
             if(err.message==="No data returned from the query.")
-                return next("There is not costumer with this ID");
+                return next("There is not costumer with the given ID");
             return next(err);
         });
 }
@@ -124,7 +124,7 @@ function updateUser(req, res, next)
         .catch(function (err)
         {
             if(err.message==="No data returned from the query.")
-                return next("There is not user with this ID");
+                return next("There is not costumer with the given ID");
             return next(err);
         });
 
@@ -225,7 +225,7 @@ function getTransactionByID(req, res, next)
         .catch(function (err)
         {
             if(err.message==="No data returned from the query.")
-                return next("No hay transacción con este ID");
+                return next("There is not transactions with the given ID");
             return next(err);
         });
 }
@@ -252,6 +252,7 @@ function createATransaction(req, res, next)
                     db.one('SELECT * FROM transactions ORDER BY ID DESC LIMIT 1')
                         .then(function (data)
                         {
+                            data.customer=dat;
                             res.status(200)
                                 .json({
                                     status: 'success',
@@ -285,27 +286,37 @@ function updateTransactions(req, res, next)
             req.body.customer=req.body.customer||data.customer;
             req.body.date=req.body.date!==undefined?new Date(req.body.date):data.date;
             req.body.amount=req.body.amount||data.amount;
-            console.log(req.body);
-            db.none('update transactions set customer=$1, date=$2, amount=$3' +
-                ' where id=$4',
-                [req.body.customer, req.body.date, req.body.amount, parseInt(req.params.id)])
-                .then(function ()
-                {
-                    res.status(200)
-                        .json({
-                            status: 'success',
-                            message: req.body
-                        });
-                })
-                .catch(function (err)
-                {
-                    return next(err);
-                });
+            db.one('select * from users where id = $1', parseInt(req.body.customer))
+                .then(function (dat)
+            {
+                db.none('update transactions set customer=$1, date=$2, amount=$3' +
+                    ' where id=$4',
+                    [req.body.customer, req.body.date, req.body.amount, parseInt(req.params.id)])
+                    .then(function ()
+                    {
+                        req.body.customer=dat;
+                        res.status(200)
+                            .json({
+                                status: 'success',
+                                message: req.body
+                            });
+                    })
+                    .catch(function (err)
+                    {
+                        return next(err);
+                    });
+            }).catch(function (err)
+            {
+                if(err.message==="No data returned from the query.")
+                    return next("There is not costumer with the given ID");
+                return next(err);
+            });
+
         })
         .catch(function (err)
         {
             if(err.message==="No data returned from the query.")
-                return next("There is not transactions with this ID");
+                return next("There is not transactions with the given ID");
             return next(err);
         });
 
