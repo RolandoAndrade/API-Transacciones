@@ -54,5 +54,11 @@ app.use(function(err, req, res, next) {
       });
 });
 
+/*
+//si el puerto está en uso
+var server = app.listen(5000, function() {
+    console.log('Ready on port %d', server.address().port);
+});
+*/
 
 module.exports = app;
