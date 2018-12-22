@@ -11,23 +11,7 @@ const db = pgp(connectionString);
 
 function getAllUsers(req, res, next)
 {
-    if(req.query.toString().length>0)
-    {
-         return searchUser(req,res,next);
-    }
-    db.any('select * from users')
-        .then(function (data)
-        {
-            res.status(200)
-                .json({
-                    status: 'success',
-                    data: data,
-                });
-        })
-        .catch(function (err)
-        {
-            return next(err);
-        });
+    return searchUser(req,res,next);
 }
 
 function getUserByID(req, res, next)
@@ -50,11 +34,31 @@ function getUserByID(req, res, next)
         });
 }
 
+function isEmailAlreadyExist(email)
+{
+    return db.one('select * from users where email = $1', email).then(function (data)
+    {
+        return data.length>0;
+    }).catch(function (err)
+    {
+        return false;
+    });
+}
+
+
 function createUser(req, res, next)
 {
     if (req.body.second_name===undefined)
     {
         req.body.second_name="";
+    }
+    if(!validateEmail(req.body.email))
+    {
+        return next("Email format incorrect");
+    }
+    if(isEmailAlreadyExist(req.body.email))
+    {
+        return next("Email already registered");
     }
     db.none('insert into users (first_name, second_name, first_surname, second_surname,email) '+
     "VALUES (${first_name}, ${second_name}, ${first_surname}, ${second_surname}, ${email})",
@@ -84,6 +88,14 @@ function createUser(req, res, next)
 function updateUser(req, res, next)
 {
     const userID = parseInt(req.params.id);
+    if(req.body.email!==undefined&&!validateEmail(req.body.email))
+    {
+        return next("Email format incorrect");
+    }
+    if(req.body.email!==undefined&&!isEmailAlreadyExist(req.body.email))
+    {
+        return next("Email already registered");
+    }
     db.one('select * from users where id = $1', userID)
         .then(function (data)
         {
@@ -112,7 +124,7 @@ function updateUser(req, res, next)
         .catch(function (err)
         {
             if(err.message==="No data returned from the query.")
-                return next("No hay usuario con este ID");
+                return next("There is not user with this ID");
             return next(err);
         });
 
@@ -124,11 +136,25 @@ function removeUser(req, res, next)
     db.result('delete from users where id = $1', userID)
         .then(function (result)
         {
+            removeAllTransactionsOfUser(req,res,next,userID);
             res.status(200)
                 .json({
                     status: 'success',
                     message: `Removed ${result.rowCount} user`
                 });
+        })
+        .catch(function (err)
+        {
+            return next(err);
+        });
+}
+
+function removeAllTransactionsOfUser(req, res, next, id)
+{
+    db.result('delete from transactions where customer = $1', id)
+        .then(function (result)
+        {
+
         })
         .catch(function (err)
         {
@@ -164,21 +190,12 @@ function searchUser(req, res, next)
         });
 }
 
-
-function getAllTransactions(req, res, next)
+function getCustomerString(req, res, next, id)
 {
-    if(req.query.toString().length>0)
-    {
-        return searchTransaction(req,res,next);
-    }
-    db.any('select * from transactions')
+    return db.one('select * from users where id = $1', id)
         .then(function (data)
         {
-            res.status(200)
-                .json({
-                    status: 'success',
-                    data: data,
-                });
+            return data;
         })
         .catch(function (err)
         {
@@ -186,12 +203,19 @@ function getAllTransactions(req, res, next)
         });
 }
 
+
+function getAllTransactions(req, res, next)
+{
+    return searchTransaction(req,res,next);
+}
+
 function getTransactionByID(req, res, next)
 {
     const userID = parseInt(req.params.id);
     db.one('select * from transactions where id = $1', userID)
-        .then(function (data)
+        .then(async function (data)
         {
+            data.customer=await getCustomerString(req,res,next,data.customer);
             res.status(200)
                 .json({
                     status: 'success',
@@ -245,11 +269,12 @@ function updateTransactions(req, res, next)
         .then(function (data)
         {
             req.body.customer=req.body.customer||data.customer;
-            req.body.date=new Date(req.body.date)||data.date;
+            req.body.date=req.body.date!==undefined?new Date(req.body.date):data.date;
             req.body.amount=req.body.amount||data.amount;
+            console.log(req.body);
             db.none('update transactions set customer=$1, date=$2, amount=$3' +
                 ' where id=$4',
-                [req.body.customer, req.body.date, req.body.amount, req.body.second_surname, parseInt(req.params.id)])
+                [req.body.customer, req.body.date, req.body.amount, parseInt(req.params.id)])
                 .then(function ()
                 {
                     res.status(200)
@@ -266,7 +291,7 @@ function updateTransactions(req, res, next)
         .catch(function (err)
         {
             if(err.message==="No data returned from the query.")
-                return next("No hay transacciones con este ID");
+                return next("There is not transactions with this ID");
             return next(err);
         });
 
@@ -311,8 +336,12 @@ function searchTransaction(req, res, next)
             ' and CAST(amount AS VARCHAR(20)) like '+"'%"+amount+"%'";
     }
     db.any(qu)
-        .then(function (data)
+        .then(async function (data)
         {
+            for(let i=0;i<data.length;i++)
+            {
+                data[i].customer=await getCustomerString(req,res,next,data[i].customer);
+            }
             res.status(200)
                 .json({
                     status: 'success',
@@ -325,6 +354,17 @@ function searchTransaction(req, res, next)
         });
 }
 
+function validateEmail(email) {
+    const REGEXP = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+    email = email.trim();
+    if(REGEXP.test(email)) {
+        return true;
+    }
+
+    console.error('Invalid email. ');
+    return false;
+}
 
 module.exports = {
     getAllUsers: getAllUsers,
