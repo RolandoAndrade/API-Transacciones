@@ -29,7 +29,7 @@ function getUserByID(req, res, next)
         .catch(function (err)
         {
             if(err.message==="No data returned from the query.")
-                return next("No hay usuario con este ID");
+                return next("There is not costumer with this ID");
             return next(err);
         });
 }
@@ -233,32 +233,46 @@ function getTransactionByID(req, res, next)
 
 function createATransaction(req, res, next)
 {
-    if (req.body.date===undefined)
+    if (req.body.date === undefined)
     {
-        req.body.date=new Date();
+        req.body.date = new Date();
     }
-    db.none('insert into transactions (customer, date, amount) '+
-        "VALUES (${customer}, ${date}, ${amount})",
-        req.body)
-        .then(function ()
+    if(req.body.customer===undefined)
+    {
+        return next("A customer ID is required");
+    }
+    db.one('select * from users where id = $1', parseInt(req.body.customer))
+        .then(function (dat)
         {
-            db.one('SELECT * FROM transactions ORDER BY ID DESC LIMIT 1')
-                .then(function (data)
+            db.none('insert into transactions (customer, date, amount) '+
+                "VALUES (${customer}, ${date}, ${amount})",
+                req.body)
+                .then(function ()
                 {
-                    res.status(200)
-                        .json({
-                            status: 'success',
-                            data: data
+                    db.one('SELECT * FROM transactions ORDER BY ID DESC LIMIT 1')
+                        .then(function (data)
+                        {
+                            res.status(200)
+                                .json({
+                                    status: 'success',
+                                    data: data
+                                });
+                        })
+                        .catch(function (err)
+                        {
+                            return next(err);
                         });
                 })
                 .catch(function (err)
                 {
-                    return next(err);
+                    return next(err.message);
                 });
         })
         .catch(function (err)
         {
-            return next(err.message);
+            if(err.message==="No data returned from the query.")
+                return next("There is not costumer with the given ID");
+            return next(err);
         });
 }
 
