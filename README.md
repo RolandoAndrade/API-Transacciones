@@ -2,6 +2,12 @@
 
 TransAPI es una API REST de un servicio de transacciones y clientes realizada como bono de 5 puntos en el segundo parcial de Ingeniería del Software.
 
+**Endpoints**
+
+- [Clientes](https://github.com/RolandoAndrade/API-Transacciones/wiki/Clientes)
+
+- [Transacciones](https://github.com/RolandoAndrade/API-Transacciones/wiki/Transacciones)
+
 **Empezando**
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
