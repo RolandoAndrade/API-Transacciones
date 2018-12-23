@@ -44,8 +44,12 @@
    
    - amount
    
-   De no haber resultados que coincidan se devuelve una tupla vacía.
+   >`GET` api/transactions/customers/{id}
    
+   Obtiene una lista con todas las transacciones hechas por un cliente.
+   
+   De no haber resultados que coincidan se devuelve en cada caso una lista vacía.
+ 
    **Requisitos:**
  
    `id=[integer]`
