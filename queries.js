@@ -230,7 +230,31 @@ function getTransactionByID(req, res, next)
         });
 }
 
-
+function getTransactionByUserID(req, res, next)
+{
+    const userID = parseInt(req.params.id);
+    db.any('select * from transactions where customer = $1', userID)
+        .then(async function (data)
+        {
+            const customerData=await getCustomerString(req,res,next,userID);
+            for(let i=0;i<data.length;i++)
+            {
+                data[i].customer=customerData;
+            }
+            res.status(200)
+                .json({
+                    status: 'success',
+                    data: data
+                });
+        })
+        .catch(function (err)
+        {
+            if(err.message==="No data returned from the query.")
+                return next("There is not transactions with the given customer ID");
+            console.log(err);
+            return next(err);
+        });
+}
 function createATransaction(req, res, next)
 {
     if (req.body.date === undefined)
@@ -402,4 +426,5 @@ module.exports = {
     createATransaction: createATransaction,
     updateTransactions: updateTransactions,
     removeTransaction: removeTransaction,
+    getTransactionByUserID: getTransactionByUserID,
 };
