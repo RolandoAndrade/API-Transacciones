@@ -48,7 +48,7 @@
    
    - email
    
-   De no haber resultados que coincidan se devuelve una tupla vacía.
+   De no haber resultados que coincidan se devuelve una lista vacía.
    
    **Requisitos:**
  
