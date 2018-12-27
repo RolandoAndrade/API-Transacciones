@@ -12,5 +12,6 @@ services:
     image: postgres:11.1-alpine
     environment:
       POSTGRES_PASSWORD: 1
+      POSTGRES_DB: transacciones
     volumes:
-      - ./sqlCreators.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
