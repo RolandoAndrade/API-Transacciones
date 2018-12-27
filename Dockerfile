@@ -3,4 +3,4 @@ EXPOSE 3000 9229
 COPY . /home/app
 WORKDIR /home/app
 RUN npm install
-ENTRYPOINT ["sh", "./scripts/start.sh"]
+ENTRYPOINT ["sh", "/scripts/start.sh"]
