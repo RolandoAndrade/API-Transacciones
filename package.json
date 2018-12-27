@@ -3,11 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -k \"npm run build:watch\" \"npm run start:dev\"",
-    "start": "node ./bin/www",
-    "start:dev": "nodemon --inspect=0.0.0.0:9229 dist/index.js",
-    "build": "tsc",
-    "build:watch": "tsc -w"
+    "start": "node app.js"
   },
   "dependencies": {
     "bluebird": "^3.5.3",
