@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently -k \"npm run build:watch\" \"npm run start:dev\"",
-    "start": "node dist/index.js",
+    "start": "node app.js",
     "start:dev": "nodemon --inspect=0.0.0.0:9229 app.js",
     "build": "tsc",
     "build:watch": "tsc -w"
