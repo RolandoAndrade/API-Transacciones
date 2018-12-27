@@ -12,3 +12,5 @@ services:
     image: postgres:11.1-alpine
     environment:
       POSTGRES_PASSWORD: 1
+    volumes:
+      - ./sqlCreators.sql
