@@ -7,14 +7,12 @@ services:
       - db
     ports:
       - "3000:3000"
+  localhost:
+    image: postgres:11.1-alpine
+    ports:
       - "5432:5432"
       - "9229:9229"
       - "80:80"
-    environment:
-      - DATABASE_URL=postgres://postgres:1@localhost:5432/transacciones
-      - PORT=3000
-  db:
-    image: postgres:11.1-alpine
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1
