@@ -1,3 +1,5 @@
+GRANT ALL ON DATABASE transacciones TO postgres;
+
 CREATE TABLE users (
   ID SERIAL PRIMARY KEY,
   first_name VARCHAR,
@@ -13,3 +15,4 @@ CREATE TABLE transactions (
   date DATE,
   amount FLOAT
 );
+
