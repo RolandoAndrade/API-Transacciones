@@ -60,5 +60,6 @@ var server = app.listen(5000, function() {
     console.log('Ready on port %d', server.address().port);
 });
 */
+app.listen(3000, '0.0.0.0');
 
 module.exports = app;
