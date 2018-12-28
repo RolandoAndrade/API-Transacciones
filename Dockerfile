@@ -4,3 +4,4 @@ COPY . /home/app
 WORKDIR /home/app
 RUN npm install
 CMD ./scripts/start.sh
+COPY init.sql /docker-entrypoint-initdb.d/10-init.sql
