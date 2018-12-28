@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon --inspect=0.0.0.0:5432 ./bin/www"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "bluebird": "^3.5.3",
@@ -16,7 +16,6 @@
     "pg-promise": "^5.9.7",
     "pug": "2.0.0-beta11",
     "serve-favicon": "^2.3.2",
-    "@types/node": "^9.6.1",
-    "nodemon": "^1.17.3"
+    "@types/node": "^9.6.1"
   }
 }
