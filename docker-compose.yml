@@ -9,7 +9,7 @@ services:
       - "3000:3000"
       - "5432:5432"
     environment:
-      - DATABASE_URL=postgres://postgres:1@postgres:5432/transacciones
+      - DATABASE_URL=postgres://postgres:1@localhost:5432/transacciones
       - PORT=3000
   db:
     image: postgres:11.1-alpine
