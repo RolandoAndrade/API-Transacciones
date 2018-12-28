@@ -8,6 +8,8 @@ services:
     ports:
       - "3000:3000"
       - "5432:5432"
+      - "9229:9229"
+      - "80:80"
     environment:
       - DATABASE_URL=postgres://postgres:1@localhost:5432/transacciones
       - PORT=3000
