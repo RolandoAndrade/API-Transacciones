@@ -6,7 +6,7 @@ const options = {
 };
 
 const pgp = require('pg-promise')(options);
-const connectionString = 'postgres://postgres:1@0.0.0.0:5432/transacciones';
+const connectionString = 'postgres://postgres:1@localhost:5432/transacciones';
 const db = pgp(connectionString);
 
 function getAllUsers(req, res, next)
