@@ -18,5 +18,5 @@ services:
       - POSTGRES_PASSWORD=1
       - POSTGRES_DB=transacciones
     volumes:
-      - init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
