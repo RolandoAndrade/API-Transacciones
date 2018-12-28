@@ -7,7 +7,7 @@ services:
       - postgres
     ports:
       - "3000:3000"
-      - "9229:9229"
+      - "5432:5432"
   postgres:
     image: postgres:11.1-alpine
     environment:
