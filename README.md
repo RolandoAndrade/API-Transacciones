@@ -1,4 +1,4 @@
-**TransAPI**
+#**TransAPI**
 
 TransAPI es una API REST de un servicio de transacciones y clientes realizada como bono de 5 puntos en el segundo parcial de Ingeniería del Software.
 
@@ -10,31 +10,62 @@ TransAPI es una API REST de un servicio de transacciones y clientes realizada co
 
 **Empezando**
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Para correr un contenedor con el proyecto primero es necesario clonar el proyecto
 
+    git clone https://github.com/RolandoAndrade/API-Transacciones.git
+
+Luego es necesario entrar al directorio scripts y cambiar los permisos del archivo `start.sh`
+
+```bash
+    cd API-Transacciones/scripts
+    chmod 777 start.sh
+    cd ..
+ ``` 
+ 
+Posteriormente es necesario correr el contenedor:
+
+```bash
+    sudo docker-compose up app
+ ``` 
+ 
+Si se quiere usar la misma consola para realizar las peticiones es necesario correr el contenedor en segundo plano:
+
+```bash
+    sudo docker-compose up -d app
+ ``` 
+ 
+Para detener el contenedor:
+
+```bash
+    sudo docker-compose down
+ ``` 
+ 
+ Para eliminar cualquier residuo del contenedor:
+ 
+ ```bash
+     sudo docker container prune
+  ``` 
+  
+  La aplicación debería correr en el servidor local en el puerto 3000:
+  
+ ```bash
+    telnet localhost 3000
+ ``` 
+ 
 **Prerequisitos**
 
-What things you need to install the software and how to install them
-
+- Docker.
+- Docker compose (Incluido en las versiones más recientes de Docker).
+- Git.
 
 **Built With**
-Dropwizard - The web framework used
-Maven - Dependency Management
-ROME - Used to generate RSS Feeds
-Contributing
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
 
-Versioning
-We use SemVer for versioning. For the versions available, see the tags on this repository.
+- `NodeJS` como framework de desarrollo web.
+- `npm` como manejador de dependencias
+- `PostgreSQL` como base de datos.
+- `pg Promises` como controlador de base de datos.
+- `Docker` como contenedores.
 
-Authors
-Billie Thompson - Initial work - PurpleBooth
-See also the list of contributors who participated in this project.
+**Agradecimientos**
 
-License
-This project is licensed under the MIT License - see the LICENSE.md file for details
-
-Acknowledgments
-Hat tip to anyone whose code was used
-Inspiration
-etc
+@viccalvarezz
