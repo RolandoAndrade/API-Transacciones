@@ -65,6 +65,7 @@ Para detener el contenedor:
 - `PostgreSQL` como base de datos.
 - `pg Promises` como controlador de base de datos.
 - `Docker` como contenedores.
+- `Heroku` para alojar la Base de Datos.
 
 **Agradecimientos**
 
