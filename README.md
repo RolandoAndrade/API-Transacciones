@@ -58,7 +58,7 @@ Para detener el contenedor:
 - Docker compose (Incluido en las versiones más recientes de Docker).
 - Git.
 
-**Built With**
+**Herramientas utilizadas**
 
 - `NodeJS` como framework de desarrollo web.
 - `npm` como manejador de dependencias
