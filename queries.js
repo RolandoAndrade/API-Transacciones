@@ -2,11 +2,21 @@ const promise = require('bluebird');
 
 const options = {
     // Initialization Options
-    promiseLib: promise
+    promiseLib: promise,
+    error(error, e) {
+        if (e.cn) {
+            // A connection-related error;
+            //
+            // Connections are reported back with the password hashed,
+            // for safe errors logging, without exposing passwords.
+            console.log('CN:', e.cn);
+            console.log('EVENT:', error.message || error);
+        }
+    }
 };
 
 const pgp = require('pg-promise')(options);
-const connectionString = 'postgres://postgres:1@0.0.0.0:80/transacciones';
+const connectionString = 'postgres://ygqngyntmnkayw:178f3e5a336d2a687d17e822bff111c69333ee122bf6c95a691822b034bbe696@ec2-54-235-178-189.compute-1.amazonaws.com:5432/def5sl55fh28j5?ssl=true';
 const db = pgp(connectionString);
 
 function getAllUsers(req, res, next)
@@ -34,19 +44,22 @@ function getUserByID(req, res, next)
         });
 }
 
-function isEmailAlreadyExist(email)
+async function isEmailAlreadyExist(email)
 {
-    return db.one('select * from users where email = $1', email).then(function (data)
+
+    const r= await db.any('select * from users where email = $1', email).then(function (data)
     {
         return data.length>0;
     }).catch(function (err)
     {
+        console.log(err);
         return false;
     });
+    return r;
 }
 
 
-function createUser(req, res, next)
+async function createUser(req, res, next)
 {
     if (req.body.second_name===undefined)
     {
@@ -56,7 +69,9 @@ function createUser(req, res, next)
     {
         return next("Email format incorrect");
     }
-    if(isEmailAlreadyExist(req.body.email))
+    const v=await isEmailAlreadyExist(req.body.email);
+    console.log(v);
+    if(v)
     {
         return next("Email already registered");
     }
@@ -76,23 +91,26 @@ function createUser(req, res, next)
                 })
                 .catch(function (err)
                 {
+                    console.log(err);
                     return next(err);
                 });
         })
         .catch(function (err)
         {
+            console.log(err);
             return next(err.message);
         });
 }
 
-function updateUser(req, res, next)
+async function updateUser(req, res, next)
 {
     const userID = parseInt(req.params.id);
     if(req.body.email!==undefined&&!validateEmail(req.body.email))
     {
         return next("Email format incorrect");
     }
-    if(req.body.email!==undefined&&!isEmailAlreadyExist(req.body.email))
+    const v=await isEmailAlreadyExist(req.body.email);
+    if(req.body.email!==undefined&&v)
     {
         return next("Email already registered");
     }
@@ -134,9 +152,9 @@ function removeUser(req, res, next)
 {
     const userID = parseInt(req.params.id);
     db.result('delete from users where id = $1', userID)
-        .then(function (result)
+        .then(async function (result)
         {
-            removeAllTransactionsOfUser(req,res,next,userID);
+            await removeAllTransactionsOfUser(req,res,next,userID);
             res.status(200)
                 .json({
                     status: 'success',
@@ -149,9 +167,9 @@ function removeUser(req, res, next)
         });
 }
 
-function removeAllTransactionsOfUser(req, res, next, id)
+async function removeAllTransactionsOfUser(req, res, next, id)
 {
-    db.result('delete from transactions where customer = $1', id)
+    await db.result('delete from transactions where customer = $1', id)
         .then(function (result)
         {
 
@@ -190,9 +208,9 @@ function searchUser(req, res, next)
         });
 }
 
-function getCustomerString(req, res, next, id)
+async function getCustomerString(req, res, next, id)
 {
-    return db.one('select * from users where id = $1', id)
+    const r = db.one('select * from users where id = $1', id)
         .then(function (data)
         {
             return data;
@@ -201,6 +219,7 @@ function getCustomerString(req, res, next, id)
         {
             return next(err);
         });
+    return r;
 }
 
 
@@ -255,6 +274,7 @@ function getTransactionByUserID(req, res, next)
             return next(err);
         });
 }
+
 function createATransaction(req, res, next)
 {
     if (req.body.date === undefined)
@@ -399,6 +419,7 @@ function searchTransaction(req, res, next)
         })
         .catch(function (err)
         {
+            console.log(err);
             return next(err);
         });
 }
