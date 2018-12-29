@@ -1,4 +1,4 @@
-#**TransAPI**
+# **TransAPI**
 
 TransAPI es una API REST de un servicio de transacciones y clientes realizada como bono de 5 puntos en el segundo parcial de Ingeniería del Software.
 
@@ -69,4 +69,4 @@ Para detener el contenedor:
 
 **Agradecimientos**
 
-@viccalvarezz
+    @viccalvarezz
