@@ -60,7 +60,8 @@ Para detener el contenedor:
 
 **Herramientas utilizadas**
 
-- `NodeJS` como framework de desarrollo web.
+- `NodeJS` como entorno de ejecución de JavaScript.
+- `Express` como framework para peticiones REST.
 - `npm` como manejador de dependencias
 - `PostgreSQL` como base de datos.
 - `pg Promises` como controlador de base de datos.
